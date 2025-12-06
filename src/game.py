@@ -2,6 +2,7 @@ import pygame
 import sys
 import json
 import os
+import string
 from src.gemini_dm import GeminiDM
 
 # Constants
@@ -99,18 +100,23 @@ class Game:
         # Again, blocking call for simplicity.
         # In production, use threading.Thread(target=self.threaded_request, args=(action,)).start()
 
-        clean_action = action.strip().lower()
+        # Parse command more robustly
+        parts = action.strip().split()
+        first_word = ""
+        if parts:
+            # lower case and strip punctuation from the first word
+            first_word = parts[0].lower().strip(string.punctuation)
 
         try:
-            if clean_action == "supervise":
+            if first_word == "supervise":
                 response = self.gemini.supervise()
                 self.history.append(f"System: {response}")
-            elif clean_action == "exit":
+            elif first_word == "exit":
                 self.running = False
-            elif clean_action == "save":
+            elif first_word == "save":
                 response = self.save_game()
                 self.history.append(f"System: {response}")
-            elif clean_action == "load":
+            elif first_word == "load":
                 response = self.load_game()
                 self.history.append(f"System: {response}")
             else:
