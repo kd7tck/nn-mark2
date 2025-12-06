@@ -66,9 +66,10 @@ class Game:
 
     def save_game(self):
         try:
+            dm_save_data = self.gemini.generate_save_state()
             data = {
                 'display_history': self.history,
-                'gemini_history': self.gemini.get_history()
+                'dm_save_data': dm_save_data
             }
             with open(SAVE_FILE, 'w') as f:
                 json.dump(data, f)
@@ -85,9 +86,17 @@ class Game:
                 data = json.load(f)
 
             self.history = data.get('display_history', [])
-            gemini_history = data.get('gemini_history', [])
+            dm_save_data = data.get('dm_save_data', "")
 
-            if self.gemini.load_history(gemini_history):
+            # Support older saves if dm_save_data is missing but gemini_history exists
+            if not dm_save_data and 'gemini_history' in data:
+                gemini_history = data['gemini_history']
+                if self.gemini.load_history(gemini_history):
+                    return "Game loaded successfully (Legacy)."
+                else:
+                    return "Error reloading AI context."
+
+            if self.gemini.load_save_state(dm_save_data):
                 return "Game loaded successfully."
             else:
                 return "Error reloading AI context."

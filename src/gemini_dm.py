@@ -104,3 +104,49 @@ class GeminiDM:
         except Exception as e:
             print(f"Error loading history: {e}")
             return False
+
+    def generate_save_state(self):
+        if not self.is_ready():
+            return None
+
+        # Prompt for generating save data
+        save_prompt = (
+            "SYSTEM: PAUSE GAME. GENERATE SAVE STATE. "
+            "Please summarize the entire current game state into a JSON format so it can be saved and reloaded later. "
+            "Include: 'character' (name, race, class, stats), 'inventory' (list of items), "
+            "'status' (health, conditions), 'location' (current place, description), "
+            "'quest' (current goals), and 'history' (a concise narrative summary of events so far). "
+            "Output ONLY the JSON object. Do not add any conversational text."
+        )
+
+        try:
+            response = self.chat.send_message(save_prompt)
+            return response.text
+        except Exception as e:
+            return f"Error generating save state: {e}"
+
+    def load_save_state(self, save_data):
+        if not self.model:
+            return False
+
+        try:
+            # Start a new chat
+            self.chat = self.model.start_chat(history=[])
+
+            # Send system prompt first to re-establish persona
+            self.chat.send_message(self.system_prompt)
+
+            # Send the save data to restore context
+            restore_prompt = (
+                f"SYSTEM: RESTORE GAME. The game is being reloaded. "
+                f"Here is the saved state: {save_data} "
+                "Use this information to restore the game context. "
+                "Acknowledge that the game is restored and describe the current scene to the player so they can continue."
+            )
+            self.chat.send_message(restore_prompt)
+
+            self.started = True
+            return True
+        except Exception as e:
+            print(f"Error loading save state: {e}")
+            return False
