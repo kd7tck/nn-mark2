@@ -112,11 +112,10 @@ class GeminiDM:
         # Prompt for generating save data
         save_prompt = (
             "SYSTEM: PAUSE GAME. GENERATE SAVE STATE. "
-            "Please summarize the entire current game state into a JSON format so it can be saved and reloaded later. "
-            "Include: 'character' (name, race, class, stats), 'inventory' (list of items), "
-            "'status' (health, conditions), 'location' (current place, description), "
-            "'quest' (current goals), and 'history' (a concise narrative summary of events so far). "
-            "Output ONLY the JSON object. Do not add any conversational text."
+            "Please summarize the entire current game state in plain English. "
+            "Include details about the character (name, stats, etc.), inventory, "
+            "status (health, conditions), location, current quest, and a narrative summary of events so far. "
+            "This summary will be used to reload the game later, so be comprehensive but concise."
         )
 
         try:
@@ -139,7 +138,7 @@ class GeminiDM:
             # Send the save data to restore context
             restore_prompt = (
                 f"SYSTEM: RESTORE GAME. The game is being reloaded. "
-                f"Here is the saved state: {save_data} "
+                f"Here is the saved state summary: {save_data} "
                 "Use this information to restore the game context. "
                 "Acknowledge that the game is restored and describe the current scene to the player so they can continue."
             )
