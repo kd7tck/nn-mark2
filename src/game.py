@@ -99,7 +99,7 @@ class Game:
         # Again, blocking call for simplicity.
         # In production, use threading.Thread(target=self.threaded_request, args=(action,)).start()
 
-        clean_action = action.strip().lower()
+        clean_action = action.lower()
 
         try:
             if clean_action == "supervise":
