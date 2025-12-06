@@ -1,5 +1,7 @@
 import pygame
 import sys
+import json
+import os
 from src.gemini_dm import GeminiDM
 
 # Constants
@@ -10,6 +12,7 @@ TEXT_COLOR = (200, 200, 200)
 INPUT_COLOR = (255, 255, 255)
 INPUT_BG_COLOR = (50, 50, 50)
 PADDING = 20
+SAVE_FILE = "savegame.json"
 
 class Game:
     def __init__(self):
@@ -61,13 +64,54 @@ class Game:
         else:
             self.input_text += event.unicode
 
+    def save_game(self):
+        try:
+            data = {
+                'display_history': self.history,
+                'gemini_history': self.gemini.get_history()
+            }
+            with open(SAVE_FILE, 'w') as f:
+                json.dump(data, f)
+            return "Game saved successfully."
+        except Exception as e:
+            return f"Error saving game: {e}"
+
+    def load_game(self):
+        if not os.path.exists(SAVE_FILE):
+            return "No save file found."
+
+        try:
+            with open(SAVE_FILE, 'r') as f:
+                data = json.load(f)
+
+            self.history = data.get('display_history', [])
+            gemini_history = data.get('gemini_history', [])
+
+            if self.gemini.load_history(gemini_history):
+                return "Game loaded successfully."
+            else:
+                return "Error reloading AI context."
+        except Exception as e:
+            return f"Error loading game: {e}"
+
     def process_action(self, action):
         self.waiting_for_response = True
         # Again, blocking call for simplicity.
         # In production, use threading.Thread(target=self.threaded_request, args=(action,)).start()
+
+        clean_action = action.strip().lower()
+
         try:
-            if action.strip().lower() == "supervise":
+            if clean_action == "supervise":
                 response = self.gemini.supervise()
+                self.history.append(f"System: {response}")
+            elif clean_action == "exit":
+                self.running = False
+            elif clean_action == "save":
+                response = self.save_game()
+                self.history.append(f"System: {response}")
+            elif clean_action == "load":
+                response = self.load_game()
                 self.history.append(f"System: {response}")
             else:
                 response = self.gemini.send_action(action)

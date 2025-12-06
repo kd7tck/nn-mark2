@@ -70,3 +70,37 @@ class GeminiDM:
             return response.text
         except Exception as e:
             return f"Error communicating with Gemini: {e}"
+
+    def get_history(self):
+        """Returns the chat history in a serializable format."""
+        if not self.chat:
+            return []
+
+        serialized_history = []
+        for content in self.chat.history:
+            parts = []
+            for part in content.parts:
+                # Assuming part has text attribute.
+                # In google-generativeai, parts are usually objects with text property.
+                if hasattr(part, 'text'):
+                    parts.append({'text': part.text})
+
+            serialized_history.append({
+                'role': content.role,
+                'parts': parts
+            })
+        return serialized_history
+
+    def load_history(self, history_data):
+        """Restores the chat session from history data."""
+        if not self.model:
+            return False
+
+        try:
+            # history_data should be a list of dicts compatible with start_chat
+            self.chat = self.model.start_chat(history=history_data)
+            self.started = True # Assuming if we load history, the game is started
+            return True
+        except Exception as e:
+            print(f"Error loading history: {e}")
+            return False

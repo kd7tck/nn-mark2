@@ -47,6 +47,17 @@ Once setup is complete and the `.env` file is created, run the game using:
 - **Enter**: Send your action to the Gemini Dungeon Master.
 - **Backspace**: Edit your input.
 
+### Commands
+
+The following commands are handled locally by the game engine and are **not** sent to the DM AI:
+
+- **`exit`**: Closes the game.
+- **`save`**: Saves the current game state to `savegame.json`.
+- **`load`**: Loads the game state from `savegame.json`.
+- **`supervise`**: Issues a system instruction to the AI to correct deviations or hallucinations.
+
+All other text input is sent to the Gemini AI to be processed as part of the game.
+
 ## Customization
 
 You can modify the system prompt in `src/gemini_dm.py` to change the tone, setting, or specific rules of the campaign.
