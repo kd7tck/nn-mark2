@@ -66,8 +66,12 @@ class Game:
         # Again, blocking call for simplicity.
         # In production, use threading.Thread(target=self.threaded_request, args=(action,)).start()
         try:
-            response = self.gemini.send_action(action)
-            self.history.append(f"DM: {response}")
+            if action.strip().lower() == "supervise":
+                response = self.gemini.supervise()
+                self.history.append(f"System: {response}")
+            else:
+                response = self.gemini.send_action(action)
+                self.history.append(f"DM: {response}")
         except Exception as e:
             self.history.append(f"Error: {e}")
         self.waiting_for_response = False

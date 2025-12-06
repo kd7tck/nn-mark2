@@ -40,6 +40,24 @@ class GeminiDM:
         except Exception as e:
             return f"Error communicating with Gemini: {e}"
 
+    def supervise(self):
+        if not self.is_ready():
+            return "Gemini API Key missing or invalid."
+
+        supervision_prompt = (
+            "SYSTEM INSTRUCTION: You are deviating from the role of the AD&D 2nd Edition Dungeon Master "
+            "or hallucinating details inconsistent with the game state. Stop immediately. "
+            "Review the previous context. Return to the game. "
+            "Summarize the current situation for the player and wait for their action. "
+            "Maintain the persona strictly."
+        )
+
+        try:
+            response = self.chat.send_message(supervision_prompt)
+            return response.text
+        except Exception as e:
+            return f"Error communicating with Gemini: {e}"
+
     def send_action(self, action):
         if not self.is_ready():
             return "Gemini API Key missing or invalid."
