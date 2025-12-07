@@ -13,4 +13,15 @@ REM Install dependencies
 echo Installing dependencies...
 pip install -r requirements.txt
 
-echo Setup complete. Please create a .env file with your GEMINI_API_KEY before running.
+REM Create .env file
+if exist .env goto EnvExists
+set /p api_key="Please enter your Google Gemini API Key: "
+echo GEMINI_API_KEY=%api_key% > .env
+echo .env file created.
+goto EndEnv
+
+:EnvExists
+echo .env file already exists. Skipping generation.
+
+:EndEnv
+echo Setup complete. You can now run the game using run.bat
