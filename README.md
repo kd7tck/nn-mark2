@@ -12,9 +12,14 @@ This is a Pygame-based interactive fiction game engine powered by Google Gemini 
 1.  **Clone the repository.**
 2.  **Run the setup script:**
 
-    ```bash
-    ./setup.sh
-    ```
+    *   **Linux/macOS:**
+        ```bash
+        ./setup.sh
+        ```
+    *   **Windows:**
+        ```cmd
+        setup.bat
+        ```
 
 3.  **Configure API Key:**
 
@@ -30,9 +35,14 @@ This is a Pygame-based interactive fiction game engine powered by Google Gemini 
 
 Once setup is complete and the `.env` file is created, run the game using:
 
-```bash
-./run.sh
-```
+*   **Linux/macOS:**
+    ```bash
+    ./run.sh
+    ```
+*   **Windows:**
+    ```cmd
+    run.bat
+    ```
 
 ## How it Works
 
