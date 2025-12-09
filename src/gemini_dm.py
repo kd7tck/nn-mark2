@@ -45,6 +45,9 @@ class GeminiDM:
         if not self.is_ready():
             return "Gemini API Key missing or invalid."
 
+        if not self.started:
+            return "Game has not started yet."
+
         supervision_prompt = (
             "SYSTEM INSTRUCTION: You are deviating from the role of the AD&D 2nd Edition Dungeon Master "
             "or hallucinating details inconsistent with the game state. Stop immediately. "
