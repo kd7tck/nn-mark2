@@ -32,10 +32,11 @@ class GeminiDM:
         if not self.is_ready():
             return "Gemini API Key missing or invalid. Please check your .env file."
 
-        self.started = True
+        
         try:
             # We send the system prompt as the first message to prime the context
             response = self.chat.send_message(self.system_prompt)
+            self.started = True
             return response.text
         except Exception as e:
             return f"Error communicating with Gemini: {e}"
