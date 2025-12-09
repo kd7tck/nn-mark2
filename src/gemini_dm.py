@@ -113,9 +113,19 @@ class GeminiDM:
         save_prompt = (
             "SYSTEM: PAUSE GAME. GENERATE SAVE STATE. "
             "Please summarize the entire current game state in plain English. "
-            "Include details about the character (name, stats, etc.), inventory, "
-            "status (health, conditions), location, current quest, and a narrative summary of events so far. "
-            "This summary will be used to reload the game later, so be comprehensive but concise."
+            "You must include specific details for the following to ensure a complete save: "
+            "1. Character: Name, Race, Class, Level, Experience Points. "
+            "2. Ability Scores: Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma. "
+            "3. Status: Current and Max Hit Points, Status Effects (Buffs, Debuffs, Conditions). "
+            "4. Equipment: Worn items (Armor, Weapons, Accessories), Carried items, Encumbrance level. "
+            "5. Inventory: List of all items with counts and brief descriptions. "
+            "6. Magic: Memorized Spells, Used Spells, Remaining spell slots, Active magical effects. "
+            "7. Location: Region name, Specific area description, Environmental details. "
+            "8. Time: Current date and time of day in the game world. "
+            "9. Quests: Active quests, Completed quests, Current objectives. "
+            "10. NPCs: Nearby NPCs, their attitudes/relationships to the player, active conversations. "
+            "11. Narrative: A summary of recent events, immediate threats, and the current situation. "
+            "This summary will be used to reload the game later, so be extremely comprehensive."
         )
 
         try:
