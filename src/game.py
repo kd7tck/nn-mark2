@@ -96,7 +96,9 @@ class Game:
                 else:
                     return "Error reloading AI context."
 
-            if self.gemini.load_save_state(dm_save_data):
+            dm_response = self.gemini.load_save_state(dm_save_data)
+            if dm_response:
+                self.history.append(f"DM: {dm_response}")
                 return "Game loaded successfully."
             else:
                 return "Error reloading AI context."

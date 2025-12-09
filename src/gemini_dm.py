@@ -153,10 +153,10 @@ class GeminiDM:
                 "Use this information to restore the game context. "
                 "Acknowledge that the game is restored and describe the current scene to the player so they can continue."
             )
-            self.chat.send_message(restore_prompt)
+            response = self.chat.send_message(restore_prompt)
 
             self.started = True
-            return True
+            return response.text
         except Exception as e:
             print(f"Error loading save state: {e}")
-            return False
+            return None
